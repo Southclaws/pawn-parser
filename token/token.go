@@ -1,6 +1,10 @@
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+//
+// Adapted for the Pawn language by
+// Barnaby "Southclaws" Keene
+// 2017-08-05
 
 // Package token defines constants representing the lexical tokens of the Go
 // programming language and basic operations on tokens (printing, predicates).
@@ -73,7 +77,6 @@ const (
 	NEQ      // !=
 	LEQ      // <=
 	GEQ      // >=
-	DEFINE   // :=
 	ELLIPSIS // ...
 
 	LPAREN // (
@@ -93,8 +96,8 @@ const (
 	// Keywords
 	BREAK
 	CASE
-	CHAN
 	CONST
+	STATIC
 	CONTINUE
 
 	DEFAULT
@@ -103,8 +106,8 @@ const (
 	FALLTHROUGH
 	FOR
 
-	FUNC
-	GO
+	STOCK
+	PUBLIC
 	GOTO
 	IF
 	IMPORT
@@ -121,6 +124,10 @@ const (
 	TYPE
 	VAR
 	keyword_end
+
+	directive_beg
+	// directives such as #include #define etc.
+	directive_end
 )
 
 var tokens = [...]string{
@@ -177,7 +184,6 @@ var tokens = [...]string{
 	NEQ:      "!=",
 	LEQ:      "<=",
 	GEQ:      ">=",
-	DEFINE:   ":=",
 	ELLIPSIS: "...",
 
 	LPAREN: "(",
@@ -194,7 +200,6 @@ var tokens = [...]string{
 
 	BREAK:    "break",
 	CASE:     "case",
-	CHAN:     "chan",
 	CONST:    "const",
 	CONTINUE: "continue",
 
@@ -204,8 +209,8 @@ var tokens = [...]string{
 	FALLTHROUGH: "fallthrough",
 	FOR:         "for",
 
-	FUNC:   "func",
-	GO:     "go",
+	STOCK:  "stock",
+	PUBLIC: "public",
 	GOTO:   "goto",
 	IF:     "if",
 	IMPORT: "import",

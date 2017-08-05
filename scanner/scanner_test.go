@@ -5,12 +5,13 @@
 package scanner
 
 import (
-	"go/token"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	"github.com/Southclaws/pawn-parser/token"
 )
 
 var fset = token.NewFileSet()
@@ -133,7 +134,6 @@ var tokens = [...]elt{
 	{token.NEQ, "!=", operator},
 	{token.LEQ, "<=", operator},
 	{token.GEQ, ">=", operator},
-	{token.DEFINE, ":=", operator},
 	{token.ELLIPSIS, "...", operator},
 
 	{token.LPAREN, "(", operator},
@@ -151,7 +151,6 @@ var tokens = [...]elt{
 	// Keywords
 	{token.BREAK, "break", keyword},
 	{token.CASE, "case", keyword},
-	{token.CHAN, "chan", keyword},
 	{token.CONST, "const", keyword},
 	{token.CONTINUE, "continue", keyword},
 
@@ -161,8 +160,6 @@ var tokens = [...]elt{
 	{token.FALLTHROUGH, "fallthrough", keyword},
 	{token.FOR, "for", keyword},
 
-	{token.FUNC, "func", keyword},
-	{token.GO, "go", keyword},
 	{token.GOTO, "goto", keyword},
 	{token.IF, "if", keyword},
 	{token.IMPORT, "import", keyword},
@@ -566,15 +563,15 @@ func TestInit(t *testing.T) {
 	}
 
 	// 2nd init
-	src2 := "go true { ]"
+	src2 := "else true { ]"
 	f2 := fset.AddFile("src2", fset.Base(), len(src2))
 	s.Init(f2, []byte(src2), nil, dontInsertSemis)
 	if f2.Size() != len(src2) {
 		t.Errorf("bad file size: got %d, expected %d", f2.Size(), len(src2))
 	}
 	_, tok, _ = s.Scan() // go
-	if tok != token.GO {
-		t.Errorf("bad token: got %s, expected %s", tok, token.GO)
+	if tok != token.ELSE {
+		t.Errorf("bad token: got %s, expected %s", tok, token.ELSE)
 	}
 
 	if s.ErrorCount != 0 {

@@ -1,8 +1,12 @@
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+//
+// Adapted for the Pawn language by
+// Barnaby "Southclaws" Keene
+// 2017-08-05
 
-// Package scanner implements a scanner for Go source text.
+// Package scanner implements a scanner for Pawn source text.
 // It takes a []byte as source which can then be tokenized
 // through repeated calls to the Scan method.
 //
@@ -11,11 +15,12 @@ package scanner
 import (
 	"bytes"
 	"fmt"
-	"go/token"
 	"path/filepath"
 	"strconv"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/Southclaws/pawn-parser/token" // adapted
 )
 
 // An ErrorHandler may be provided to Scanner.Init. If a syntax error is
@@ -653,7 +658,7 @@ scanAgain:
 			tok = token.STRING
 			lit = s.scanRawString()
 		case ':':
-			tok = s.switch2(token.COLON, token.DEFINE)
+			tok = token.COLON
 		case '.':
 			if '0' <= s.ch && s.ch <= '9' {
 				insertSemi = true
@@ -747,6 +752,8 @@ scanAgain:
 			}
 		case '|':
 			tok = s.switch3(token.OR, token.OR_ASSIGN, '|', token.LOR)
+		//case '#':
+		//	tok = token.DDEFINE // will need to name this one DDEFINE (directive-define) to avoid re-use of the original DEFINE (:=) token
 		default:
 			// next reports unexpected BOMs - don't repeat
 			if ch != bom {

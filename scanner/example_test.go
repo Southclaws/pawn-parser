@@ -6,8 +6,9 @@ package scanner_test
 
 import (
 	"fmt"
-	"go/scanner"
-	"go/token"
+
+	"github.com/Southclaws/pawn-parser/scanner"
+	"github.com/Southclaws/pawn-parser/token"
 )
 
 func ExampleScanner_Scan() {
