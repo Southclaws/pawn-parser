@@ -8,6 +8,20 @@ The first commit to this repository includes the original, official Go 1.8.1 `sc
 
 The first stage is getting a substantial set of sample files of *valid* and *invalid* Pawn source code. This will be collected in the repository and tests will be written for all the samples. Then the codebase will be moulded to fit these tests and hopefully I won't forget about anything!
 
+You'll notice that if you run `go run main.go` the sample code looks pretty good except for:
+
+```
+00 - ILLEGAL    "#"
+00 - IDENT      "include"
+00 - <  ""
+00 - IDENT      "YSI"
+00 - ILLEGAL    "\\"
+00 - IDENT      "y_hooks"
+00 - >  ""
+```
+
+That's because Go does not have any concept of preprocessor directives - the things in C/++/Pawn that start with a `#` character. This shouldn't be too hard and I plan to also process include trees and dependencies (woo!) so you should be able to know the exact location of a function from it's call points and build a graph of dependencies for a set of modular scripts.
+
 Once that's done, I will build an AST package that will transform the tokenised form into an AST for walking and performing static analysis.
 
 Hopefully this will help with such things as:
