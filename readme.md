@@ -8,7 +8,7 @@ The first commit to this repository includes the original, official Go 1.8.1 `sc
 
 The first stage is getting a substantial set of sample files of *valid* and *invalid* Pawn source code. This will be collected in the repository and tests will be written for all the samples. Then the codebase will be moulded to fit these tests and hopefully I won't forget about anything!
 
-I'm pretty confident Scavenge and Survive has a substantial example of every Pawn language construct so I will initially use that as a test bed since it's also modular and includes a decent amount of good and bad code practices. In the future, if more people start to use this I'll have a better understanding of what I've missed and what this project should aim for.
+I'm pretty confident [Scavenge and Survive](https://github.com/Southclaws/ScavengeSurvive) has a substantial example of every Pawn language construct so I will initially use that as a test bed since it's also modular and includes a decent amount of good and bad code practices. In the future, if more people start to use this I'll have a better understanding of what I've missed and what this project should aim for.
 
 You'll notice that if you run `go run main.go` the sample code looks pretty good except for:
 
