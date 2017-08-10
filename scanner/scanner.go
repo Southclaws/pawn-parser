@@ -752,8 +752,8 @@ scanAgain:
 			}
 		case '|':
 			tok = s.switch3(token.OR, token.OR_ASSIGN, '|', token.LOR)
-		//case '#':
-		//	tok = token.DDEFINE // will need to name this one DDEFINE (directive-define) to avoid re-use of the original DEFINE (:=) token
+		case '#':
+			tok = token.DIRECTIVE
 		default:
 			// next reports unexpected BOMs - don't repeat
 			if ch != bom {

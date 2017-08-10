@@ -90,14 +90,13 @@ const (
 	RBRACE    // }
 	SEMICOLON // ;
 	COLON     // :
+	DIRECTIVE // #
 	operator_end
 
 	keyword_beg
 	// Keywords
 	BREAK
 	CASE
-	CONST
-	STATIC
 	CONTINUE
 
 	DEFAULT
@@ -106,6 +105,8 @@ const (
 	FALLTHROUGH
 	FOR
 
+	CONST
+	STATIC
 	STOCK
 	PUBLIC
 	GOTO
@@ -127,6 +128,24 @@ const (
 
 	directive_beg
 	// directives such as #include #define etc.
+	// prefixed with D to avoid collisions with existing tokens such as IF, ELSE and DEFINE
+
+	DPRAGMA     // #pragma
+	DSECTION    // #section
+	DLINE       // #line
+	DFILE       // #file
+	DINCLUDE    // #include <somelib>
+	DTRYINCLUDE // #tryinclude <somelib>
+	DDEFINE     // #define SOME_CONST
+	DDEFINED    // #if defined SOME_CONST
+	DUNDEF      // #undef SOME_CONST
+	DASSERT     // #assert
+	DIF         // #if SOME_CONST
+	DELSEIF     // #elseif SOME_CONST
+	DELSE       // #else
+	DENDIF      // #endif
+	DERROR      // #error
+	DENDINPUT   // #endinput
 	directive_end
 )
 
@@ -197,10 +216,10 @@ var tokens = [...]string{
 	RBRACE:    "}",
 	SEMICOLON: ";",
 	COLON:     ":",
+	DIRECTIVE: "#",
 
 	BREAK:    "break",
 	CASE:     "case",
-	CONST:    "const",
 	CONTINUE: "continue",
 
 	DEFAULT:     "default",
@@ -209,6 +228,8 @@ var tokens = [...]string{
 	FALLTHROUGH: "fallthrough",
 	FOR:         "for",
 
+	CONST:  "const",
+	STATIC: "static",
 	STOCK:  "stock",
 	PUBLIC: "public",
 	GOTO:   "goto",
@@ -226,6 +247,23 @@ var tokens = [...]string{
 	SWITCH: "switch",
 	TYPE:   "type",
 	VAR:    "var",
+
+	DPRAGMA:     "pragma",
+	DSECTION:    "section",
+	DLINE:       "line",
+	DFILE:       "file",
+	DINCLUDE:    "include",
+	DTRYINCLUDE: "tryinclude",
+	DDEFINE:     "define",
+	DDEFINED:    "defined",
+	DUNDEF:      "undef",
+	DASSERT:     "assert",
+	DIF:         "if",
+	DELSEIF:     "elseif",
+	DELSE:       "else",
+	DENDIF:      "endif",
+	DERROR:      "error",
+	DENDINPUT:   "endinput",
 }
 
 // String returns the string corresponding to the token tok.
@@ -311,3 +349,8 @@ func (tok Token) IsOperator() bool { return operator_beg < tok && tok < operator
 // it returns false otherwise.
 //
 func (tok Token) IsKeyword() bool { return keyword_beg < tok && tok < keyword_end }
+
+// IsDirective returns true for tokens corresponding to directives;
+// it returns false otherwise.
+//
+func (tok Token) IsDirective() bool { return directive_beg < tok && tok < directive_end }
