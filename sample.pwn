@@ -23,7 +23,9 @@
 
 
 #include <YSI\y_hooks>
+#include "local.pwn"
 
+static const string[] = "hello";
 
 new
 		tab_Check[MAX_PLAYERS],

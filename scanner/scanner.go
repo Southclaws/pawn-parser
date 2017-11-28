@@ -43,11 +43,12 @@ type Scanner struct {
 	mode Mode         // scanning mode
 
 	// scanning state
-	ch         rune // current character
-	offset     int  // character offset
-	rdOffset   int  // reading offset (position after current character)
-	lineOffset int  // current line offset
-	insertSemi bool // insert a semicolon before next newline
+	ch          rune        // current character
+	offset      int         // character offset
+	rdOffset    int         // reading offset (position after current character)
+	lineOffset  int         // current line offset
+	insertSemi  bool        // insert a semicolon before next newline
+	inDirective token.Token // is the scanner inside a preprocessor directive token?
 
 	// public state - ok to modify
 	ErrorCount int // number of errors encountered
@@ -485,6 +486,50 @@ func (s *Scanner) scanString() string {
 	return string(s.src[offs:s.offset])
 }
 
+func (s *Scanner) scanAngleInclude() string {
+	// '<' opening already consumed
+	offs := s.offset - 1
+
+	for {
+		ch := s.ch
+		if ch == '\n' || ch < 0 {
+			s.error(offs, "include angle-string literal not terminated")
+			break
+		}
+		s.next()
+		if ch == '>' {
+			break
+		}
+		if ch == '\\' {
+			s.scanEscape('"')
+		}
+	}
+
+	return string(s.src[offs:s.offset])
+}
+
+func (s *Scanner) scanQuoteInclude() string {
+	// '"' opening already consumed
+	offs := s.offset - 1
+
+	for {
+		ch := s.ch
+		if ch == '\n' || ch < 0 {
+			s.error(offs, "include string literal not terminated")
+			break
+		}
+		s.next()
+		if ch == '"' {
+			break
+		}
+		if ch == '\\' {
+			s.scanEscape('"')
+		}
+	}
+
+	return string(s.src[offs:s.offset])
+}
+
 func stripCR(b []byte) []byte {
 	c := make([]byte, len(b))
 	i := 0
@@ -623,6 +668,13 @@ scanAgain:
 			case token.IDENT, token.BREAK, token.CONTINUE, token.FALLTHROUGH, token.RETURN:
 				insertSemi = true
 			}
+			// if the scanner is on a # line but hasn't determined the directive token yet
+			if s.inDirective == token.DIRECTIVE {
+				tok = token.LookupDirective(lit)
+				if tok != token.IDENT {
+					s.inDirective = tok
+				}
+			}
 		} else {
 			insertSemi = true
 			tok = token.IDENT
@@ -644,11 +696,17 @@ scanAgain:
 			// set in the first place and exited early
 			// from s.skipWhitespace()
 			s.insertSemi = false // newline consumed
+			s.inDirective = token.ILLEGAL
 			return pos, token.SEMICOLON, "\n"
 		case '"':
 			insertSemi = true
-			tok = token.STRING
-			lit = s.scanString()
+			if s.inDirective == token.DINCLUDE {
+				tok = token.STRING
+				lit = s.scanQuoteInclude()
+			} else {
+				tok = token.STRING
+				lit = s.scanString()
+			}
 		case '\'':
 			insertSemi = true
 			tok = token.CHAR
@@ -731,11 +789,17 @@ scanAgain:
 		case '^':
 			tok = s.switch2(token.XOR, token.XOR_ASSIGN)
 		case '<':
-			if s.ch == '-' {
-				s.next()
-				tok = token.ARROW
+			if s.inDirective == token.DINCLUDE {
+				insertSemi = true
+				tok = token.STRING
+				lit = s.scanAngleInclude()
 			} else {
-				tok = s.switch4(token.LSS, token.LEQ, '<', token.SHL, token.SHL_ASSIGN)
+				if s.ch == '-' {
+					s.next()
+					tok = token.ARROW
+				} else {
+					tok = s.switch4(token.LSS, token.LEQ, '<', token.SHL, token.SHL_ASSIGN)
+				}
 			}
 		case '>':
 			tok = s.switch4(token.GTR, token.GEQ, '>', token.SHR, token.SHR_ASSIGN)
@@ -754,6 +818,7 @@ scanAgain:
 			tok = s.switch3(token.OR, token.OR_ASSIGN, '|', token.LOR)
 		case '#':
 			tok = token.DIRECTIVE
+			s.inDirective = token.DIRECTIVE
 		default:
 			// next reports unexpected BOMs - don't repeat
 			if ch != bom {

@@ -11,7 +11,9 @@
 //
 package token
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // Token is the set of lexical tokens of the Go programming language.
 type Token int
@@ -316,11 +318,16 @@ func (op Token) Precedence() int {
 }
 
 var keywords map[string]Token
+var directives map[string]Token
 
 func init() {
 	keywords = make(map[string]Token)
 	for i := keyword_beg + 1; i < keyword_end; i++ {
 		keywords[tokens[i]] = i
+	}
+	directives = make(map[string]Token)
+	for i := directive_beg + 1; i < directive_end; i++ {
+		directives[tokens[i]] = i
 	}
 }
 
@@ -328,6 +335,15 @@ func init() {
 //
 func Lookup(ident string) Token {
 	if tok, is_keyword := keywords[ident]; is_keyword {
+		return tok
+	}
+	return IDENT
+}
+
+// LookupDirective maps an identifier to its directive token or IDENT (if not a keyword).
+//
+func LookupDirective(ident string) Token {
+	if tok, is_directive := directives[ident]; is_directive {
 		return tok
 	}
 	return IDENT
