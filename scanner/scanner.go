@@ -497,16 +497,16 @@ func (s *Scanner) scanAngleInclude() string {
 			s.error(offs, "include angle-string literal not terminated")
 			break
 		}
+		s.next()
 		if ch == '>' {
 			break
 		}
-		s.next()
 		if ch == '\\' {
 			s.scanEscape('"')
 		}
 	}
 
-	return string(s.src[offs:s.offset])
+	return string(s.src[offs : s.offset-1])
 }
 
 func (s *Scanner) scanQuoteInclude() string {
@@ -519,16 +519,16 @@ func (s *Scanner) scanQuoteInclude() string {
 			s.error(offs, "include string literal not terminated")
 			break
 		}
+		s.next()
 		if ch == '"' {
 			break
 		}
-		s.next()
 		if ch == '\\' {
 			s.scanEscape('"')
 		}
 	}
 
-	return string(s.src[offs:s.offset])
+	return string(s.src[offs : s.offset-1])
 }
 
 func stripCR(b []byte) []byte {
