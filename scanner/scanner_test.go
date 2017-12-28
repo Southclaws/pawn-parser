@@ -155,26 +155,16 @@ var tokens = [...]elt{
 	{token.CONTINUE, "continue", keyword},
 
 	{token.DEFAULT, "default", keyword},
-	{token.DEFER, "defer", keyword},
 	{token.ELSE, "else", keyword},
-	{token.FALLTHROUGH, "fallthrough", keyword},
 	{token.FOR, "for", keyword},
 
 	{token.GOTO, "goto", keyword},
 	{token.IF, "if", keyword},
-	{token.IMPORT, "import", keyword},
 
-	{token.INTERFACE, "interface", keyword},
-	{token.MAP, "map", keyword},
-	{token.PACKAGE, "package", keyword},
-	{token.RANGE, "range", keyword},
 	{token.RETURN, "return", keyword},
 
-	{token.SELECT, "select", keyword},
-	{token.STRUCT, "struct", keyword},
 	{token.SWITCH, "switch", keyword},
-	{token.TYPE, "type", keyword},
-	{token.VAR, "var", keyword},
+	{token.NEW, "new", keyword},
 }
 
 const whitespace = "  \t  \n\n\n" // to separate tokens

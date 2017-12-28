@@ -1,3 +1,3 @@
 test1:
-	go build -o parse ./cmd
-	./parse test/sample.pwn
+	go build
+	./pawn-parser test/sample.pwn

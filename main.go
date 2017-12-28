@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Southclaws/pawn-parser/parse"
+	"github.com/Southclaws/pawn-parser/parser"
 )
 
 func main() {
-	if len(os.Args) <= 2 {
+	if len(os.Args) < 2 {
 		fmt.Println("Usage: parse [filename]")
 		return
 	}
 
-	parse.File(os.Args[1])
+	// interesting: /usr/local/go/src/go/parser/interface.go
+
+	parser.File(os.Args[1])
 }

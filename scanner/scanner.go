@@ -489,7 +489,7 @@ func (s *Scanner) scanString() string {
 
 func (s *Scanner) scanAngleInclude() string {
 	// '<' opening already consumed
-	offs := s.offset - 1
+	offs := s.offset
 
 	for {
 		ch := s.ch
@@ -497,10 +497,10 @@ func (s *Scanner) scanAngleInclude() string {
 			s.error(offs, "include angle-string literal not terminated")
 			break
 		}
-		s.next()
 		if ch == '>' {
 			break
 		}
+		s.next()
 		if ch == '\\' {
 			s.scanEscape('"')
 		}
@@ -511,7 +511,7 @@ func (s *Scanner) scanAngleInclude() string {
 
 func (s *Scanner) scanQuoteInclude() string {
 	// '"' opening already consumed
-	offs := s.offset - 1
+	offs := s.offset
 
 	for {
 		ch := s.ch
@@ -519,10 +519,10 @@ func (s *Scanner) scanQuoteInclude() string {
 			s.error(offs, "include string literal not terminated")
 			break
 		}
-		s.next()
 		if ch == '"' {
 			break
 		}
+		s.next()
 		if ch == '\\' {
 			s.scanEscape('"')
 		}
@@ -666,7 +666,7 @@ scanAgain:
 			// keywords are longer than one letter - avoid lookup otherwise
 			tok = token.Lookup(lit)
 			switch tok {
-			case token.IDENT, token.BREAK, token.CONTINUE, token.FALLTHROUGH, token.RETURN:
+			case token.IDENT, token.BREAK, token.CONTINUE, token.RETURN:
 				insertSemi = true
 			}
 			// if the scanner is on a # line but hasn't determined the directive token yet

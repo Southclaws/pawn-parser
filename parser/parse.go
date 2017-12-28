@@ -1,24 +1,27 @@
-package parse
+package parser
 
 import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/Southclaws/pawn-parser/ast"
 	"github.com/Southclaws/pawn-parser/scanner"
 	"github.com/Southclaws/pawn-parser/token"
 )
 
 // File builds a tree from the given file
-func File(filename string) {
+func File(filename string) (f *ast.File, err error) {
 	var sc scanner.Scanner
 
-	fileContents, _ := ioutil.ReadFile(filename)
+	fileContents, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return
+	}
+
 	fset := token.NewFileSet()
 
 	file := fset.AddFile(filename, fset.Base(), len(fileContents))
 	sc.Init(file, fileContents, nil, scanner.ScanComments)
-
-	//	n := ast.Node{}
 
 	depth := 0
 	for {
@@ -39,4 +42,6 @@ func File(filename string) {
 
 		fmt.Printf("%02d - %s\t%q\n", depth, tok, lit)
 	}
+
+	return
 }

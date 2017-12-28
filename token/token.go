@@ -103,9 +103,7 @@ const (
 	CONTINUE
 
 	DEFAULT
-	DEFER
 	ELSE
-	FALLTHROUGH
 	FOR
 
 	CONST
@@ -114,19 +112,11 @@ const (
 	PUBLIC
 	GOTO
 	IF
-	IMPORT
 
-	INTERFACE
-	MAP
-	PACKAGE
-	RANGE
 	RETURN
 
-	SELECT
-	STRUCT
 	SWITCH
-	TYPE
-	VAR
+	NEW
 	keyword_end
 
 	directive_beg
@@ -225,11 +215,9 @@ var tokens = [...]string{
 	CASE:     "case",
 	CONTINUE: "continue",
 
-	DEFAULT:     "default",
-	DEFER:       "defer",
-	ELSE:        "else",
-	FALLTHROUGH: "fallthrough",
-	FOR:         "for",
+	DEFAULT: "default",
+	ELSE:    "else",
+	FOR:     "for",
 
 	CONST:  "const",
 	STATIC: "static",
@@ -237,19 +225,11 @@ var tokens = [...]string{
 	PUBLIC: "public",
 	GOTO:   "goto",
 	IF:     "if",
-	IMPORT: "import",
 
-	INTERFACE: "interface",
-	MAP:       "map",
-	PACKAGE:   "package",
-	RANGE:     "range",
-	RETURN:    "return",
+	RETURN: "return",
 
-	SELECT: "select",
-	STRUCT: "struct",
 	SWITCH: "switch",
-	TYPE:   "type",
-	VAR:    "var",
+	NEW:    "new",
 
 	DPRAGMA:     "pragma",
 	DSECTION:    "section",
