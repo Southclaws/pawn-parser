@@ -48,7 +48,6 @@ func (s *IncludeSpec) Pos() token.Pos {
 	return s.Path.Pos()
 }
 func (s *ValueSpec) Pos() token.Pos { return s.Names[0].Pos() }
-func (s *TypeSpec) Pos() token.Pos  { return s.Name.Pos() }
 func (s *IncludeSpec) End() token.Pos {
 	if s.EndPos != 0 {
 		return s.EndPos
@@ -64,14 +63,12 @@ func (s *ValueSpec) End() token.Pos {
 	}
 	return s.Names[len(s.Names)-1].End()
 }
-func (s *TypeSpec) End() token.Pos { return s.Type.End() }
 
 // specNode() ensures that only spec nodes can be
 // assigned to a Spec.
 // nolint
 func (*IncludeSpec) specNode() {}
 func (*ValueSpec) specNode()   {}
-func (*TypeSpec) specNode()    {}
 
 // A declaration is represented by one of the following declaration nodes.
 //
@@ -90,15 +87,14 @@ type (
 	//
 	// Relationship between Tok value and Specs element type:
 	//
-	//	token.IMPORT  *IncludeSpec
-	//	token.CONST   *ValueSpec
-	//	token.TYPE    *TypeSpec
-	//	token.VAR     *ValueSpec
+	//	token.DIRECTIVE  *IncludeSpec where tok.Lit == "include"
+	//	token.CONST      *ValueSpec
+	//	token.NEW        *ValueSpec
 	//
 	GenDecl struct {
 		Doc    *CommentGroup // associated documentation; or nil
 		TokPos token.Pos     // position of Tok
-		Tok    token.Token   // IMPORT, CONST, TYPE, VAR
+		Tok    token.Token   // DIRECTIVE "incude", CONST, NEW
 		Lparen token.Pos     // position of '(', if any
 		Specs  []Spec
 		Rparen token.Pos // position of ')', if any

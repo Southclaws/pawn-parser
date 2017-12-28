@@ -267,16 +267,12 @@ func (x *UnaryExpr) Pos() token.Pos      { return x.OpPos }
 func (x *BinaryExpr) Pos() token.Pos     { return x.X.Pos() }
 func (x *KeyValueExpr) Pos() token.Pos   { return x.Key.Pos() }
 func (x *ArrayType) Pos() token.Pos      { return x.Lbrack }
-func (x *StructType) Pos() token.Pos     { return x.Struct }
 func (x *FuncType) Pos() token.Pos {
 	if x.Func.IsValid() || x.Params == nil { // see issue 3870
 		return x.Func
 	}
 	return x.Params.Pos() // interface method declarations have no "func" keyword
 }
-func (x *InterfaceType) Pos() token.Pos { return x.Interface }
-func (x *MapType) Pos() token.Pos       { return x.Map }
-func (x *ChanType) Pos() token.Pos      { return x.Begin }
 
 // nolint
 func (x *BadExpr) End() token.Pos { return x.To }
@@ -301,7 +297,6 @@ func (x *UnaryExpr) End() token.Pos      { return x.X.End() }
 func (x *BinaryExpr) End() token.Pos     { return x.Y.End() }
 func (x *KeyValueExpr) End() token.Pos   { return x.Value.End() }
 func (x *ArrayType) End() token.Pos      { return x.Elt.End() }
-func (x *StructType) End() token.Pos     { return x.Fields.End() }
 func (x *FuncType) End() token.Pos {
 	if x.Results != nil {
 		return x.Results.End()
