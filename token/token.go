@@ -19,6 +19,7 @@ import (
 type Token int
 
 // The list of tokens.
+// nolint
 const (
 	// Special tokens
 	ILLEGAL Token = iota
@@ -298,11 +299,11 @@ const (
 )
 
 // Precedence returns the operator precedence of the binary
-// operator op. If op is not a binary operator, the result
+// operator tok. If tok is not a binary operator, the result
 // is LowestPrecedence.
 //
-func (op Token) Precedence() int {
-	switch op {
+func (tok Token) Precedence() int {
+	switch tok {
 	case LOR:
 		return 1
 	case LAND:
@@ -334,7 +335,7 @@ func init() {
 // Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
 //
 func Lookup(ident string) Token {
-	if tok, is_keyword := keywords[ident]; is_keyword {
+	if tok, is := keywords[ident]; is {
 		return tok
 	}
 	return IDENT
@@ -343,7 +344,7 @@ func Lookup(ident string) Token {
 // LookupDirective maps an identifier to its directive token or IDENT (if not a keyword).
 //
 func LookupDirective(ident string) Token {
-	if tok, is_directive := directives[ident]; is_directive {
+	if tok, is := directives[ident]; is {
 		return tok
 	}
 	return IDENT

@@ -12,6 +12,7 @@ import (
 	"github.com/Southclaws/pawn-parser/token"
 )
 
+// Error is for use in ErrorLlist,
 // In an ErrorList, an error is represented by an *Error.
 // The position Pos, if valid, points to the beginning of
 // the offending token, and the error condition is described

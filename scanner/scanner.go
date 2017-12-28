@@ -91,11 +91,12 @@ func (s *Scanner) next() {
 	}
 }
 
-// A mode value is a set of flags (or 0).
+// Mode value is a set of flags (or 0).
 // They control scanner behavior.
 //
 type Mode uint
 
+// nolint
 const (
 	ScanComments    Mode = 1 << iota // return comments as COMMENT tokens
 	dontInsertSemis                  // do not automatically insert semicolons - for testing only

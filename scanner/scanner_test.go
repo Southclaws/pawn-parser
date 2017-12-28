@@ -216,7 +216,7 @@ func checkPos(t *testing.T, lit string, p token.Pos, expected token.Position) {
 
 // Verify that calling Scan() provides the correct results.
 func TestScan(t *testing.T) {
-	whitespace_linecount := newlineCount(whitespace)
+	whitespaceLinecount := newlineCount(whitespace)
 
 	// error handler
 	eh := func(_ token.Position, msg string) {
@@ -297,7 +297,7 @@ func TestScan(t *testing.T) {
 
 		// update position
 		epos.Offset += len(e.lit) + len(whitespace)
-		epos.Line += newlineCount(e.lit) + whitespace_linecount
+		epos.Line += newlineCount(e.lit) + whitespaceLinecount
 
 	}
 

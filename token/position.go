@@ -70,7 +70,7 @@ func (pos Position) String() string {
 //
 type Pos int
 
-// The zero value for Pos is NoPos; there is no file and line information
+// NoPos is the zero value for Pos; there is no file and line information
 // associated with it, and NoPos().IsValid() is false. NoPos is always
 // smaller than any other Pos value. The corresponding Position value
 // for NoPos is the zero value for Position.
