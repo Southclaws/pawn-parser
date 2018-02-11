@@ -1,14 +1,12 @@
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-//
 // Adapted for the Pawn language by
 // Barnaby "Southclaws" Keene
 // 2017-08-05
 
 // Package token defines constants representing the lexical tokens of the Go
 // programming language and basic operations on tokens (printing, predicates).
-//
 package token
 
 import (
@@ -249,12 +247,25 @@ var tokens = [...]string{
 	DENDINPUT:   "endinput",
 }
 
+var keywords map[string]Token
+var directives map[string]Token
+
+func init() {
+	keywords = make(map[string]Token)
+	for i := keyword_beg + 1; i < keyword_end; i++ {
+		keywords[tokens[i]] = i
+	}
+	directives = make(map[string]Token)
+	for i := directive_beg + 1; i < directive_end; i++ {
+		directives[tokens[i]] = i
+	}
+}
+
 // String returns the string corresponding to the token tok.
 // For operators, delimiters, and keywords the string is the actual
 // token character sequence (e.g., for the token ADD, the string is
 // "+"). For all other tokens the string corresponds to the token
 // constant name (e.g. for the token IDENT, the string is "IDENT").
-//
 func (tok Token) String() string {
 	s := ""
 	if 0 <= tok && tok < Token(len(tokens)) {
@@ -271,7 +282,6 @@ func (tok Token) String() string {
 // starting with precedence 1 up to unary operators. The highest
 // precedence serves as "catch-all" precedence for selector,
 // indexing, and other operator and delimiter tokens.
-//
 const (
 	LowestPrec  = 0 // non-operators
 	UnaryPrec   = 6
@@ -281,7 +291,6 @@ const (
 // Precedence returns the operator precedence of the binary
 // operator tok. If tok is not a binary operator, the result
 // is LowestPrecedence.
-//
 func (tok Token) Precedence() int {
 	switch tok {
 	case LOR:
@@ -298,22 +307,7 @@ func (tok Token) Precedence() int {
 	return LowestPrec
 }
 
-var keywords map[string]Token
-var directives map[string]Token
-
-func init() {
-	keywords = make(map[string]Token)
-	for i := keyword_beg + 1; i < keyword_end; i++ {
-		keywords[tokens[i]] = i
-	}
-	directives = make(map[string]Token)
-	for i := directive_beg + 1; i < directive_end; i++ {
-		directives[tokens[i]] = i
-	}
-}
-
 // Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
-//
 func Lookup(ident string) Token {
 	if tok, is := keywords[ident]; is {
 		return tok
@@ -322,7 +316,6 @@ func Lookup(ident string) Token {
 }
 
 // LookupDirective maps an identifier to its directive token or IDENT (if not a keyword).
-//
 func LookupDirective(ident string) Token {
 	if tok, is := directives[ident]; is {
 		return tok
@@ -334,20 +327,16 @@ func LookupDirective(ident string) Token {
 
 // IsLiteral returns true for tokens corresponding to identifiers
 // and basic type literals; it returns false otherwise.
-//
 func (tok Token) IsLiteral() bool { return literal_beg < tok && tok < literal_end }
 
 // IsOperator returns true for tokens corresponding to operators and
 // delimiters; it returns false otherwise.
-//
 func (tok Token) IsOperator() bool { return operator_beg < tok && tok < operator_end }
 
 // IsKeyword returns true for tokens corresponding to keywords;
 // it returns false otherwise.
-//
 func (tok Token) IsKeyword() bool { return keyword_beg < tok && tok < keyword_end }
 
 // IsDirective returns true for tokens corresponding to directives;
 // it returns false otherwise.
-//
 func (tok Token) IsDirective() bool { return directive_beg < tok && tok < directive_end }

@@ -12,12 +12,9 @@ import (
 	"github.com/Southclaws/pawn-parser/token"
 )
 
-// Error is for use in ErrorLlist,
-// In an ErrorList, an error is represented by an *Error.
-// The position Pos, if valid, points to the beginning of
-// the offending token, and the error condition is described
-// by Msg.
-//
+// Error is for use in ErrorLlist, In an ErrorList, an error is represented by an *Error. The
+// position Pos, if valid, points to the beginning of the offending token, and the error condition
+// is described by Msg.
 type Error struct {
 	Pos token.Position
 	Msg string
@@ -26,8 +23,6 @@ type Error struct {
 // Error implements the error interface.
 func (e Error) Error() string {
 	if e.Pos.Filename != "" || e.Pos.IsValid() {
-		// don't print "<unknown position>"
-		// TODO(gri) reconsider the semantics of Position.IsValid
 		return e.Pos.String() + ": " + e.Msg
 	}
 	return e.Msg
@@ -35,7 +30,6 @@ func (e Error) Error() string {
 
 // ErrorList is a list of *Errors.
 // The zero value for an ErrorList is an empty ErrorList ready to use.
-//
 type ErrorList []*Error
 
 // Add adds an Error with given position and error message to an ErrorList.
@@ -44,12 +38,17 @@ func (p *ErrorList) Add(pos token.Position, msg string) {
 }
 
 // Reset resets an ErrorList to no errors.
-func (p *ErrorList) Reset() { *p = (*p)[0:0] }
+func (p *ErrorList) Reset() {
+	*p = (*p)[0:0]
+}
 
 // ErrorList implements the sort Interface.
-func (p ErrorList) Len() int      { return len(p) }
-func (p ErrorList) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
-
+func (p ErrorList) Len() int {
+	return len(p)
+}
+func (p ErrorList) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
 func (p ErrorList) Less(i, j int) bool {
 	e := &p[i].Pos
 	f := &p[j].Pos
@@ -71,7 +70,6 @@ func (p ErrorList) Less(i, j int) bool {
 // Sort sorts an ErrorList. *Error entries are sorted by position,
 // other errors are sorted by error message, and before any *Error
 // entry.
-//
 func (p ErrorList) Sort() {
 	sort.Sort(p)
 }
@@ -114,7 +112,6 @@ func (p ErrorList) Err() error {
 // PrintError is a utility function that prints a list of errors to w,
 // one error per line, if the err parameter is an ErrorList. Otherwise
 // it prints the err string.
-//
 func PrintError(w io.Writer, err error) {
 	if list, ok := err.(ErrorList); ok {
 		for _, e := range list {

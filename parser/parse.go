@@ -10,37 +10,34 @@ import (
 )
 
 // File builds a tree from the given file
-func File(filename string) (f *ast.File, err error) {
-	var sc scanner.Scanner
-
-	fileContents, err := ioutil.ReadFile(filename)
+func File(filename string, includePaths []string) (f *ast.File, err error) {
+	fset := token.NewFileSet()
+	tokens, err := scanFile(fset, filename)
 	if err != nil {
 		return
 	}
 
-	fset := token.NewFileSet()
+	fmt.Println(tokens)
 
+	return
+}
+
+func scanFile(fset *token.FileSet, filename string) (tokens []token.Token, err error) {
+	fileContents, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return
+	}
 	file := fset.AddFile(filename, fset.Base(), len(fileContents))
-	sc.Init(file, fileContents, nil, scanner.ScanComments)
 
-	depth := 0
+	var scan scanner.Scanner
+	scan.Init(file, fileContents, nil, scanner.ScanComments)
+
 	for {
-		_, tok, lit := sc.Scan()
+		_, tok, _ := scan.Scan()
 		if tok == token.EOF {
 			break
 		}
-
-		if tok.String() == "}" {
-			depth--
-		}
-		for i := 0; i < depth; i++ {
-			fmt.Print("\t")
-		}
-		if tok.String() == "{" {
-			depth++
-		}
-
-		fmt.Printf("%02d - %s\t%q\n", depth, tok, lit)
+		tokens = append(tokens, tok)
 	}
 
 	return

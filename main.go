@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"github.com/Southclaws/pawn-parser/parser"
 )
 
 func main() {
@@ -15,5 +13,5 @@ func main() {
 
 	// interesting: /usr/local/go/src/go/parser/interface.go
 
-	parser.File(os.Args[1])
+	// parser.File(os.Args[1])
 }
